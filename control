@@ -1,0 +1,8 @@
+Package: com.muirey03.learnai
+Name: LearnAI
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome application!
+Maintainer: Muirey03
+Author: Muirey03
+Section: Utilities

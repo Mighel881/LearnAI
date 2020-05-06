@@ -1,3 +1,4 @@
+TARGET = iphone:clang:latest:13.0
 ARCHS = arm64
 
 include $(THEOS)/makefiles/common.mk
@@ -6,7 +7,8 @@ APPLICATION_NAME = LearnAI
 
 LearnAI_FILES = $(wildcard *.mm *.cpp)
 LearnAI_FRAMEWORKS = UIKit CoreGraphics
-LearnAI_CFLAGS = -fobjc-arc -Wno-unguarded-availability-new
+LearnAI_CFLAGS = -fobjc-arc -std=c++17 -stdlib=libc++ -Ilib/include
+LearnAI_LIBRARIES = c++
 
 include $(THEOS_MAKE_PATH)/application.mk
 

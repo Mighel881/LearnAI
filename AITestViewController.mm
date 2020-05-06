@@ -6,6 +6,8 @@
 	if ((self = [super init]))
 	{
 		self.title = @"Test";
+		UIImage* itemImg = [UIImage systemImageNamed:@"pencil.and.outline"];
+		self.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Test" image:itemImg tag:0];
 	}
 	return self;
 }

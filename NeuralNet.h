@@ -2,7 +2,7 @@
 #include <vector>
 #include <utility>
 #include <functional>
-#include <Eigen/Dense> //Eigen library
+#include <Eigen/Sparse> //Eigen library
 
 #define DEFAULT_ACTIVATION &sigmoid
 #define DEFAULT_D_ACTIVATION &d_sigmoid

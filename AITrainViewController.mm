@@ -1,11 +1,11 @@
-#import "AIMainPageViewController.h"
+#import "AITrainViewController.h"
 
-@implementation AIMainPageViewController
+@implementation AITrainViewController
 -(instancetype)init
 {
 	if ((self = [super init]))
 	{
-		self.title = @"LearnAI";
+		self.title = @"Train";
 	}
 	return self;
 }

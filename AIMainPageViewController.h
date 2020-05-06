@@ -1,3 +1,0 @@
-@interface AIMainPageViewController : UIViewController
-
-@end

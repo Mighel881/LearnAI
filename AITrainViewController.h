@@ -1,0 +1,3 @@
+@interface AITrainViewController : UIViewController
+
+@end

@@ -31,19 +31,21 @@
 	//add buttons:
 	const CGFloat cornerRadius = 5.;
 	void(^layoutBtn)(UIButton*) = ^(UIButton* btn){
+		[btn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+		btn.tintColor = UIColor.whiteColor;
 		btn.clipsToBounds = YES;
 		btn.layer.cornerRadius = cornerRadius;
 		[_stackView addArrangedSubview:btn];
 	};
 	
-	UIButton* submitBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-	[submitBtn addTarget:self action:@selector(submit:) forControlEvents:UIControlEventTouchUpInside];
-	submitBtn.backgroundColor = UIColor.greenColor;
+	UIButton* submitBtn = [UIButton systemButtonWithImage:[UIImage systemImageNamed:@"checkmark.circle"] target:self action:@selector(submit:)];
+	[submitBtn setTitle:@" Submit" forState:UIControlStateNormal];
+	submitBtn.backgroundColor = [UIColor colorWithRed:0.188 green:0.82 blue:0.345 alpha:1.];
 	layoutBtn(submitBtn);
 
-	UIButton* clearBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-	[clearBtn addTarget:self action:@selector(clear:) forControlEvents:UIControlEventTouchUpInside];
-	clearBtn.backgroundColor = UIColor.redColor;
+	UIButton* clearBtn = [UIButton systemButtonWithImage:[UIImage systemImageNamed:@"multiply.circle"] target:self action:@selector(clear:)];
+	[clearBtn setTitle:@" Clear" forState:UIControlStateNormal];
+	clearBtn.backgroundColor = [UIColor colorWithRed:1. green:0.271 blue:0.227 alpha:1.];
 	layoutBtn(clearBtn);
 }
 

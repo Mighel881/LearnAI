@@ -73,11 +73,17 @@
 	switch (type)
 	{
 		case AIButtonTypeSubmit:
-			RLog(@"submit"); //TODO
+			[self submitDrawing];
 			break;
 		case AIButtonTypeClear:
 			[_drawCell.canvasView clear];
 			break;
 	}
+}
+
+-(void)submitDrawing
+{
+	UIImage* img = [_drawCell.canvasView imageWithPixelSize:CGSizeMake(28, 28)];
+	
 }
 @end

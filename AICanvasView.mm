@@ -11,15 +11,7 @@
 	{
 		_lines = [NSMutableArray array];
 		self.backgroundColor = UIColor.whiteColor;
-		self.layer.cornerRadius = 15.;
-		self.clipsToBounds = YES;
-
-		//setup shadow
-		self.layer.shadowColor = UIColor.blackColor.CGColor;
-		self.layer.shadowOpacity = .5;
-		self.layer.shadowOffset = CGSizeZero;
-		self.layer.shadowRadius = 15.;
-
+		
 		//setup gesture:
 		_gesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(drag:)];
 		[self addGestureRecognizer:_gesture];
@@ -73,5 +65,14 @@
 	}
 
 	CGContextStrokePath(context);
+}
+
+-(UIImage*)imageWithPixelSize:(CGSize)pixelSize
+{
+	UIGraphicsBeginImageContextWithOptions(pixelSize, YES, 1.);
+	[self drawViewHierarchyInRect:CGRectMake(0, 0, pixelSize.width, pixelSize.height) afterScreenUpdates:NO];
+	UIImage* img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return img;
 }
 @end

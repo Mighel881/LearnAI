@@ -12,15 +12,21 @@
 
 -(void)setupCanvas
 {
-	_canvasView = [[AICanvasView alloc] initWithFrame:CGRectZero];
-	[self.contentView addSubview:_canvasView];
+	UIView* canvasContainer = [[UIView alloc] initWithFrame:CGRectZero];
+	canvasContainer.clipsToBounds = YES;
+	canvasContainer.layer.cornerRadius = 15.;
+	[self.contentView addSubview:canvasContainer];
 
-	CGFloat inset = 25.;
-	_canvasView.translatesAutoresizingMaskIntoConstraints = NO;
-	[_canvasView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:inset].active = YES;
-	[_canvasView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-inset].active = YES;
-	[_canvasView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:inset].active = YES;
-	[_canvasView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-inset].active = YES;
-	[_canvasView.heightAnchor constraintEqualToAnchor:_canvasView.widthAnchor].active = YES;
+	const CGFloat inset = 25.;
+	canvasContainer.translatesAutoresizingMaskIntoConstraints = NO;
+	[canvasContainer.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:inset].active = YES;
+	[canvasContainer.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-inset].active = YES;
+	[canvasContainer.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:inset].active = YES;
+	[canvasContainer.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-inset].active = YES;
+	[canvasContainer.heightAnchor constraintEqualToAnchor:canvasContainer.widthAnchor].active = YES;
+
+	_canvasView = [[AICanvasView alloc] initWithFrame:CGRectZero];
+	_canvasView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	[canvasContainer addSubview:_canvasView];
 }
 @end

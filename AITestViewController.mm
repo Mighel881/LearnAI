@@ -125,6 +125,7 @@ std::vector<Eigen::MatrixXf> loadWeights(std::string filePath)
 Ideas for improvements:
 - Normalise vector so values are from 0 - 255
 - Thicker pen
+- Crop drawing to fill image
 */
 
 -(void)submitDrawing

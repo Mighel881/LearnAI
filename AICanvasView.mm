@@ -12,6 +12,7 @@
 		_lines = [NSMutableArray array];
 		self.backgroundColor = UIColor.whiteColor;
 		self.layer.cornerRadius = 15.;
+		self.clipsToBounds = YES;
 
 		//setup shadow
 		self.layer.shadowColor = UIColor.blackColor.CGColor;

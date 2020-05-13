@@ -24,8 +24,7 @@
 -(void)loadView
 {
 	[super loadView];
-
-	self.view.backgroundColor = UIColor.systemBackgroundColor;
+	self.tableView.delaysContentTouches = NO;
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView*)tableView

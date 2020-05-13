@@ -1,5 +1,4 @@
 #import "AIDrawCell.h"
-#import "AICanvasView.h"
 
 @implementation AIDrawCell
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)identifier

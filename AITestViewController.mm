@@ -1,5 +1,7 @@
 #import "AITestViewController.h"
+#import "AITableCell.h"
 #import "AIDrawCell.h"
+#import "AIButtonsCell.h"
 
 @implementation AITestViewController
 {
@@ -15,7 +17,8 @@
 		self.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Test" image:itemImg tag:0];
 
 		_cellClasses = @[
-			[AIDrawCell class]
+			[AIDrawCell class],
+			[AIButtonsCell class]
 		];
 	}
 	return self;
@@ -41,9 +44,12 @@
 {
 	NSUInteger index = indexPath.row;
 	NSString* identifier = NSStringFromClass(_cellClasses[index]);
-	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+	AITableCell* cell = (AITableCell*)[tableView dequeueReusableCellWithIdentifier:identifier];
 	if (!cell)
-		cell = [(UITableViewCell*)[_cellClasses[index] alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
+		cell = [(AITableCell*)[_cellClasses[index] alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
+	cell.delegate = self;
+	if ([cell isKindOfClass:[AIDrawCell class]])
+		_drawCell = (AIDrawCell*)cell;
 	return cell;
 }
 
@@ -60,5 +66,18 @@
 -(NSIndexPath*)tableView:(UITableView*)tableView willSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
 	return nil;
+}
+
+-(void)buttonPressed:(UIButton*)btn ofType:(AIButtonType)type
+{
+	switch (type)
+	{
+		case AIButtonTypeSubmit:
+			RLog(@"submit"); //TODO
+			break;
+		case AIButtonTypeClear:
+			[_drawCell.canvasView clear];
+			break;
+	}
 }
 @end

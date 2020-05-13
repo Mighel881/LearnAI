@@ -27,6 +27,12 @@
 	return self;
 }
 
+-(void)clear
+{
+	[_lines removeAllObjects];
+	[self setNeedsDisplay];
+}
+
 -(void)drag:(UIPanGestureRecognizer*)gesture
 {
 	CGPoint point;

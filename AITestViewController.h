@@ -1,5 +1,6 @@
+#import "AICellDelegate.h"
 @class AIDrawCell;
 
-@interface AITestViewController : UITableViewController
-@property (nonatomic, strong) AIDrawCell* drawView;
+@interface AITestViewController : UITableViewController <AICellDelegate>
+@property (nonatomic, weak) AIDrawCell* drawCell;
 @end

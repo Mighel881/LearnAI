@@ -67,10 +67,12 @@
 	CGContextStrokePath(context);
 }
 
--(UIImage*)imageWithPixelSize:(CGSize)pixelSize
+-(UIImage*)captureImage
 {
-	UIGraphicsBeginImageContextWithOptions(pixelSize, YES, 1.);
-	[self drawViewHierarchyInRect:CGRectMake(0, 0, pixelSize.width, pixelSize.height) afterScreenUpdates:NO];
+	CGFloat width = MIN(self.bounds.size.width, self.bounds.size.height);
+	CGSize size = CGSizeMake(width, width);
+	UIGraphicsBeginImageContextWithOptions(size, YES, 1.);
+	[self drawViewHierarchyInRect:CGRectMake(0, 0, size.width, size.width) afterScreenUpdates:NO];
 	UIImage* img = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return img;

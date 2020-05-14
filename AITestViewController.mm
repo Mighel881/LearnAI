@@ -2,6 +2,7 @@
 #import "AITableCell.h"
 #import "AIDrawCell.h"
 #import "AIButtonsCell.h"
+#import "UIImage+Pixels.h"
 #include <fstream>
 
 std::vector<Eigen::MatrixXf> loadWeights(std::string filePath)
@@ -125,13 +126,13 @@ std::vector<Eigen::MatrixXf> loadWeights(std::string filePath)
 Ideas for improvements:
 - Normalise vector so values are from 0 - 255
 - Thicker pen
-- Crop drawing to fill image
 */
 
 -(void)submitDrawing
 {
-	UIImage* img = [_drawCell.canvasView imageWithPixelSize:CGSizeMake(28, 28)];
+	UIImage* img = [_drawCell.canvasView captureImage];
 	Eigen::VectorXf x = [self vectorFromImage:img];
+
 	//TODO - creating network should only be done once
 	auto weights = loadWeights("/Library/Application Support/LearnAI/weights.csv");
 	NeuralNet* net = new NeuralNet({784, 16, 16, 10}, &weights);
@@ -150,28 +151,56 @@ Ideas for improvements:
 
 -(Eigen::VectorXf)vectorFromImage:(UIImage*)img
 {
-	CGImageRef imageRef = img.CGImage;
-	NSUInteger width = CGImageGetWidth(imageRef);
-	NSUInteger height = CGImageGetHeight(imageRef);
-	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
-	uint8_t* data = (uint8_t*)malloc(width * height);
-	CGContextRef context = CGBitmapContextCreate(data, width, height, 8, width, colorSpace, 0);
-	CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
-	CGContextRelease(context);
-	CGColorSpaceRelease(colorSpace);
-
-	Eigen::VectorXf vec = Eigen::VectorXf::Zero(width * height);
-	for (unsigned y = 0; y < height; y++)
-	{
-		for (unsigned x = 0; x < width; x++)
+	//find far edge pixels:
+	CGSize size = img.size;
+	__block NSUInteger minX = size.width - 1;
+	__block NSUInteger minY = size.height - 1;
+	__block NSUInteger maxX = 0, maxY = 0;
+	[img iteratePixels:^(NSUInteger x, NSUInteger y, uint8_t pixel){
+		if (pixel < 0xff)
 		{
-			unsigned i = y * width + x;
-			uint8_t pixel = 0xff - data[i]; //invert
-			vec[i] = pixel;
+			if (x < minX) minX = x;
+			if (y < minY) minY = y;
+			if (x > maxX) maxX = x;
+			if (y > maxY) maxY = y;
 		}
-	}
-	
-	free((void*)data);
+		return YES;
+	}];
+
+	//crop image:
+	CGFloat croppedWidth = maxX - minX;
+	CGFloat croppedHeight = maxY - minY;
+	CGRect croppedRect = CGRectMake(minX, minY, croppedWidth, croppedHeight);
+	UIGraphicsBeginImageContextWithOptions(croppedRect.size, YES, 1.);
+	[img drawInRect:CGRectMake(-croppedRect.origin.x, -croppedRect.origin.y, size.width, size.height)];
+	img = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+
+	//render in 28x28 grid, with margin:
+	const CGFloat margin = 4;
+	CGSize finalSize = CGSizeMake(28., 28.);
+	UIGraphicsBeginImageContextWithOptions(finalSize, YES, 1.);
+	//fill white background:
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	CGContextSetFillColorWithColor(context, UIColor.whiteColor.CGColor);
+	CGContextFillRect(context, CGRectMake(0, 0, finalSize.width, finalSize.height));
+	//render smaller version in context:
+	CGFloat largestLength = MAX(croppedWidth, croppedHeight);
+	CGFloat innerSize = finalSize.width - 2 * margin;
+	CGSize scaledSize = CGSizeMake(croppedWidth / largestLength * innerSize, croppedHeight / largestLength * innerSize);
+	CGFloat startX = (finalSize.width - scaledSize.width) / 2;
+	CGFloat startY = (finalSize.height - scaledSize.height) / 2;
+	CGRect renderFrame = CGRectMake(startX, startY, scaledSize.width, scaledSize.height);
+	[img drawInRect:renderFrame];
+	img = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+
+	__block Eigen::VectorXf vec = Eigen::VectorXf::Zero(finalSize.width * finalSize.height);
+	[img iteratePixels:^(NSUInteger x, NSUInteger y, uint8_t pixel){
+		unsigned i = y * finalSize.width + x;
+		vec[i] = 0xff - pixel;
+		return YES;
+	}];
 	return vec;
 }
 @end

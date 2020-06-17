@@ -1,5 +1,6 @@
 #import "BinaryHelper.h"
 #include <fstream>
+#include <cassert>
 
 //Endianness helpers:
 #define SWAP_UINT16(x) (((x) >> 8) | ((x) << 8))
@@ -11,6 +12,7 @@ FileReader::FileReader(std::string path)
 {
 	this->path = path;
 	f = fopen(path.c_str(), "r");
+	assert(f);
 }
 
 uint32_t FileReader::read32(void)
@@ -101,28 +103,38 @@ xxxx     unsigned byte   ??               pixel
 Pixels are organized row-wise. Pixel values are 0 to 255. 0 means background (white), 255 means foreground (black).
 */
 
-std::vector<uint8_t> loadLabels(std::string path)
-{
-	std::vector<uint8_t> labels;
-	FileReader f(path);
-	uint32_t magic = f.read32();
-	if (magic == 0x00000801)
-	{
-		uint32_t itemCount = f.read32();
-		for (uint32_t i = 0; i < itemCount; i++)
-		{
-			labels.push_back(f.read8());
-		}
-	}
-	return labels;
-}
-
 std::vector<std::pair<Eigen::VectorXf, Eigen::VectorXf>> loadDataset(std::string dir, MNISTDatasetType type)
 {
+	std::vector<std::pair<Eigen::VectorXf, Eigen::VectorXf>> ret;
+
+	//label file:
 	std::string labelPath = dir + (type == MNISTDatasetTypeTest ? "t10k-labels.idx1-ubyte" : "train-labels.idx1-ubyte");
-	std::vector<uint8_t> labels = loadLabels(labelPath);
-	//DEBUG
-	for (uint32_t i = 0; i < 20; i++)
-		RLog(@"%u", (unsigned)labels[i]);
-	return {};
+	FileReader lblFile(labelPath);
+	uint32_t lblMagic = lblFile.read32();
+	assert(lblMagic == 0x00000801);
+
+	//images file:
+	std::string imgPath = dir + (type == MNISTDatasetTypeTest ? "t10k-images.idx3-ubyte" : "train-images.idx3-ubyte");
+	FileReader imgFile(imgPath);
+	uint32_t imgMagic = imgFile.read32();
+	assert(imgMagic == 0x00000803);
+
+	uint32_t count = lblFile.read32();
+	assert(count == imgFile.read32());
+	size_t imgSize = imgFile.read32() * imgFile.read32();
+
+	for (uint32_t i = 0; i < count; i++)
+	{
+		Eigen::VectorXf x = Eigen::VectorXf::Zero(imgSize);
+		for (uint32_t pi = 0; pi < imgSize; pi++)
+			x[pi] = (float)imgFile.read8();
+		
+		Eigen::VectorXf y = Eigen::VectorXf::Zero(10);
+		uint8_t label = lblFile.read8();
+		y[label] = 1.f;
+
+		ret.push_back(std::make_pair(x, y));
+	}
+
+	return ret;
 }

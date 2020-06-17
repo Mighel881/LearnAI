@@ -28,9 +28,11 @@
 
 -(void)startTrain
 {
-	if (!_trainingSet.size())
-	{
-		_trainingSet = loadDataset("/Library/Application Support/LearnAI/", MNISTDatasetTypeTrain);
-	}
+	dispatch_async(dispatch_get_main_queue(), ^{
+		if (!_trainingSet.size())
+		{
+			_trainingSet = loadDataset("/Library/Application Support/LearnAI/", MNISTDatasetTypeTrain);
+		}
+	});
 }
 @end

@@ -1,6 +1,10 @@
 #import "BinaryHelper.h"
 #include <fstream>
 
+//Endianness helpers:
+#define SWAP_UINT16(x) (((x) >> 8) | ((x) << 8))
+#define SWAP_UINT32(x) (((x) >> 24) | (((x) & 0x00FF0000) >> 8) | (((x) & 0x0000FF00) << 8) | ((x) << 24))
+
 /* FileReader class: */
 
 FileReader::FileReader(std::string path)
@@ -13,7 +17,9 @@ uint32_t FileReader::read32(void)
 {
 	uint32_t ret = 0;
 	fread((void*)&ret, sizeof(ret), 1, f);
-	return ret;
+	//file is big endian - we are little endian
+	//must convert to host endianness
+	return SWAP_UINT32(ret);
 }
 
 uint8_t FileReader::read8(void)
@@ -97,7 +103,13 @@ Pixels are organized row-wise. Pixel values are 0 to 255. 0 means background (wh
 
 std::vector<uint8_t> loadLabels(std::string path)
 {
-	RLog(@"path: %s", path.c_str());
+	FileReader f(path);
+	uint32_t magic = f.read32();
+	if (magic == 0x00000801)
+	{
+		uint32_t itemCount = f.read32();
+		RLog(@"itemCount: %u", itemCount);
+	}
 	return {};
 }
 

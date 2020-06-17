@@ -17,4 +17,20 @@
 	[super loadView];
 	self.view.backgroundColor = UIColor.systemBackgroundColor;
 }
+
+-(void)viewDidLoad
+{
+	[super viewDidLoad];
+
+	//DEBUG
+	[self startTrain];
+}
+
+-(void)startTrain
+{
+	if (!_trainingSet.size())
+	{
+		_trainingSet = loadDataset("/Library/Application Support/LearnAI/", MNISTDatasetTypeTrain);
+	}
+}
 @end

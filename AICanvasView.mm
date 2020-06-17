@@ -59,8 +59,7 @@
 			CGPoint point = [line[i] CGPointValue];
 			if (i == 0)
 				CGContextMoveToPoint(context, point.x, point.y);
-			else
-				CGContextAddLineToPoint(context, point.x, point.y);
+			CGContextAddLineToPoint(context, point.x, point.y);
 		}
 	}
 

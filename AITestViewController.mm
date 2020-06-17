@@ -65,10 +65,22 @@ std::vector<Eigen::MatrixXf> loadWeights(std::string filePath)
 	return self;
 }
 
+-(void)loadNetworkWithWeights:(NSString*)weightPath
+{
+	auto weights = loadWeights(weightPath.UTF8String);
+	_network = new NeuralNet({784, 16, 16, 10}, &weights);
+}
+
 -(void)loadView
 {
 	[super loadView];
 	self.tableView.delaysContentTouches = NO;
+}
+
+-(void)viewDidLoad
+{
+	[super viewDidLoad];
+	[self loadNetworkWithWeights:@"/Library/Application Support/LearnAI/weights.csv"];
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
@@ -133,12 +145,8 @@ Ideas for improvements:
 	UIImage* img = [_drawCell.canvasView captureImage];
 	Eigen::VectorXf x = [self vectorFromImage:img];
 
-	//TODO - creating network should only be done once
-	auto weights = loadWeights("/Library/Application Support/LearnAI/weights.csv");
-	NeuralNet* net = new NeuralNet({784, 16, 16, 10}, &weights);
-	Eigen::VectorXf h = net->go(x);
+	Eigen::VectorXf h = _network->go(x);
 	unsigned guess = NeuralNet::findLargest(h);
-	delete net;
 	
 	NSString* msg = [NSString stringWithFormat:@"I think that is a %u", guess];
 	UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Luketh" message:msg preferredStyle:UIAlertControllerStyleAlert];
@@ -202,5 +210,10 @@ Ideas for improvements:
 		return YES;
 	}];
 	return vec;
+}
+
+-(void)dealloc
+{
+	delete _network;
 }
 @end

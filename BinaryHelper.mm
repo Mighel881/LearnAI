@@ -103,20 +103,26 @@ Pixels are organized row-wise. Pixel values are 0 to 255. 0 means background (wh
 
 std::vector<uint8_t> loadLabels(std::string path)
 {
+	std::vector<uint8_t> labels;
 	FileReader f(path);
 	uint32_t magic = f.read32();
 	if (magic == 0x00000801)
 	{
 		uint32_t itemCount = f.read32();
-		RLog(@"itemCount: %u", itemCount);
+		for (uint32_t i = 0; i < itemCount; i++)
+		{
+			labels.push_back(f.read8());
+		}
 	}
-	return {};
+	return labels;
 }
 
 std::vector<std::pair<Eigen::VectorXf, Eigen::VectorXf>> loadDataset(std::string dir, MNISTDatasetType type)
 {
 	std::string labelPath = dir + (type == MNISTDatasetTypeTest ? "t10k-labels.idx1-ubyte" : "train-labels.idx1-ubyte");
 	std::vector<uint8_t> labels = loadLabels(labelPath);
-	RLog(@"labels.size(): %zu", labels.size());
+	//DEBUG
+	for (uint32_t i = 0; i < 20; i++)
+		RLog(@"%u", (unsigned)labels[i]);
 	return {};
 }

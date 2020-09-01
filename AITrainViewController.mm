@@ -3,7 +3,7 @@
 @implementation AITrainViewController
 -(instancetype)init
 {
-	if ((self = [super init]))
+	if ((self = [self initWithStyle:UITableViewStyleGrouped]))
 	{
 		self.title = @"Train";
 		UIImage* itemImg = [UIImage systemImageNamed:@"slider.horizontal.3"];

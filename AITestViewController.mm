@@ -110,7 +110,7 @@ Ideas for improvements:
 	unsigned guess = NeuralNet::findLargest(h);
 	
 	NSString* msg = [NSString stringWithFormat:@"I think that is a %u", guess];
-	UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Luketh" message:msg preferredStyle:UIAlertControllerStyleAlert];
+	UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"LearnAI" message:msg preferredStyle:UIAlertControllerStyleAlert];
 	UIAlertAction* correctAction = [UIAlertAction actionWithTitle:@"Correct" style:UIAlertActionStyleDefault handler:nil];
 	UIAlertAction* incorrectAction = [UIAlertAction actionWithTitle:@"Incorrect" style:UIAlertActionStyleDefault handler:nil];
 	[alert addAction:correctAction];

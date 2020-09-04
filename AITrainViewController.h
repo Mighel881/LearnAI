@@ -5,5 +5,6 @@
 @property (nonatomic, weak) AIGraphCell* graphCell;
 @property (nonatomic, assign) std::vector<std::pair<Eigen::VectorXf, Eigen::VectorXf>> trainingSet;
 -(void)startTrain;
+-(void)stopTrain;
 -(void)epochCompletedWithCost:(float)cost;
 @end

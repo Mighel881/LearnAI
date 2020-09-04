@@ -8,6 +8,7 @@
 	NeuralNet* _network;
 	dispatch_queue_t _trainingQueue;
 	NSMutableArray* _graphPoints;
+	BOOL _needsStopping;
 }
 
 -(instancetype)init
@@ -109,7 +110,7 @@
 			[self startTrain];
 			break;
 		case AIButtonTypeStop:
-			//stop
+			[self stopTrain];
 			break;
 		default:
 			break;
@@ -145,12 +146,19 @@
 		}
 
 		_network = new NeuralNet({784, 16, 16, 10}, nullptr);
-		for (unsigned i = 0; i < epochs; i++)
+		for (unsigned i = 0; i < epochs && !_needsStopping; i++)
 		{
 			float cost = _network->train(_trainingSet, trainingRate, batchSize);
-			[self epochCompletedWithCost:cost];
+			if (!_needsStopping)
+				[self epochCompletedWithCost:cost];
 		}
+		_needsStopping = NO;
 	});
+}
+
+-(void)stopTrain
+{
+	_needsStopping = YES;
 }
 
 -(void)epochCompletedWithCost:(float)cost

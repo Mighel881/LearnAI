@@ -69,7 +69,7 @@
 
 -(CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    return UITableViewAutomaticDimension;
+	return UITableViewAutomaticDimension;
 }
 
 -(BOOL)tableView:(UITableView*)tableView shouldHighlightRowAtIndexPath:(NSIndexPath*)indexPath
@@ -91,6 +91,8 @@
 			break;
 		case AIButtonTypeClear:
 			[_drawCell.canvasView clear];
+			break;
+		default:
 			break;
 	}
 }

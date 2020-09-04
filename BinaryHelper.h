@@ -25,4 +25,4 @@ typedef enum
 } MNISTDatasetType;
 
 std::vector<Eigen::MatrixXf> loadWeights(std::string filePath);
-std::vector<std::pair<Eigen::VectorXf, Eigen::VectorXf>> loadDataset(std::string dir, MNISTDatasetType type);
+std::vector<std::pair<Eigen::VectorXf, Eigen::VectorXf>> loadDataset(std::string dir, MNISTDatasetType type, uint32_t maxSize = UINT32_MAX);

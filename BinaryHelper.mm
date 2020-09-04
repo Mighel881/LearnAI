@@ -99,7 +99,7 @@ xxxx     unsigned byte   ??               pixel
 Pixels are organized row-wise. Pixel values are 0 to 255. 0 means background (white), 255 means foreground (black).
 */
 
-std::vector<std::pair<Eigen::VectorXf, Eigen::VectorXf>> loadDataset(std::string dir, MNISTDatasetType type)
+std::vector<std::pair<Eigen::VectorXf, Eigen::VectorXf>> loadDataset(std::string dir, MNISTDatasetType type, uint32_t maxSize)
 {
 	std::vector<std::pair<Eigen::VectorXf, Eigen::VectorXf>> ret;
 
@@ -118,6 +118,7 @@ std::vector<std::pair<Eigen::VectorXf, Eigen::VectorXf>> loadDataset(std::string
 	uint32_t count = lblFile.read32();
 	assert(count == imgFile.read32());
 	size_t imgSize = imgFile.read32() * imgFile.read32();
+	count = MIN(count, maxSize);
 
 	for (uint32_t i = 0; i < count; i++)
 	{

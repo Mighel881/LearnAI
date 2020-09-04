@@ -1,10 +1,12 @@
 typedef NS_ENUM(NSInteger, AIButtonType)
 {
 	AIButtonTypeSubmit,
-	AIButtonTypeClear
+	AIButtonTypeClear,
+	AIButtonTypeStart,
+	AIButtonTypeStop
 };
 
 @protocol AICellDelegate
-@required
+@optional
 -(void)buttonPressed:(UIButton*)btn ofType:(AIButtonType)type;
 @end

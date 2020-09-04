@@ -34,6 +34,12 @@
 	self.tableView.delaysContentTouches = NO;
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+	[super viewDidAppear:animated];
+	[self setupPlotRange];
+}
+
 -(NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
 {
 	return 1;
@@ -108,6 +114,20 @@
 		default:
 			break;
 	}
+}
+
+-(void)setupPlotRange
+{
+	CPTXYPlotSpace* plotSpace = (CPTXYPlotSpace*)_graphCell.graph.defaultPlotSpace;
+	plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:@0 length:@(_graphPoints.count + 1)];
+
+	CGFloat maxCost = 1.0;
+	for (NSNumber* pt in _graphPoints)
+	{
+		if ([pt floatValue] > maxCost)
+			maxCost = [pt floatValue];
+	}
+	plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:@0 length:@(maxCost)];
 }
 
 -(void)startTrain

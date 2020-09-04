@@ -51,10 +51,6 @@
 	graph.paddingTop = 30.0;
 	graph.paddingRight = 15.0;
 
-	CPTXYPlotSpace* plotSpace = (CPTXYPlotSpace*)graph.defaultPlotSpace;
-	plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:@0 length:@1];
-	plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:@0 length:@1];
-
 	CPTMutableTextStyle* axisTextStyle = [CPTMutableTextStyle new];
 	axisTextStyle.color = [CPTColor whiteColor];
 	axisTextStyle.fontName = @"HelveticaNeue-Bold";

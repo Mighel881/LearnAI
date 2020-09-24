@@ -1,5 +1,6 @@
 #import "AITrainViewController.h"
 #import "AIStartStopCell.h"
+#import "AISlidersCell.h"
 #include "NeuralNet.h"
 
 @implementation AITrainViewController
@@ -21,6 +22,7 @@
 
 		_cellClasses = @[
 			[AIGraphCell class],
+			[AISlidersCell class],
 			[AIStartStopCell class]
 		];
 
